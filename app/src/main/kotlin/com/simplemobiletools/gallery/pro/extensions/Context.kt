@@ -62,6 +62,10 @@ val Context.favoritesDB: FavoritesDao get() = GalleryDatabase.getInstance(applic
 
 val Context.dateTakensDB: DateTakensDao get() = GalleryDatabase.getInstance(applicationContext).DateTakensDao()
 
+val Context.objectsDB: ObjectsDao get() = GalleryDatabase.getInstance(applicationContext).ObjectsDao()
+
+val Context.recognizablesDB: RecognizablesDao get() = GalleryDatabase.getInstance(applicationContext).RecognizablesDao()
+
 val Context.recycleBin: File get() = filesDir
 
 fun Context.movePinnedDirectoriesToFront(dirs: ArrayList<Directory>): ArrayList<Directory> {
@@ -394,6 +398,10 @@ fun Context.rescanFolderMediaSync(path: String) {
             }
         }.execute()
     }
+}
+
+fun Context.scanMediaForRecognizables(): List<Medium> {
+    return recognizablesDB.getMediaNotScanned()
 }
 
 fun Context.storeDirectoryItems(items: ArrayList<Directory>) {

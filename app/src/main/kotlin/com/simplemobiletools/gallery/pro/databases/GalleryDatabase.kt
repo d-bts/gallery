@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.simplemobiletools.gallery.pro.interfaces.*
 import com.simplemobiletools.gallery.pro.models.*
 
-@Database(entities = [Directory::class, Medium::class, Widget::class, DateTaken::class, Favorite::class], version = 10)
+@Database(entities = [Directory::class, Medium::class, Widget::class, DateTaken::class, Favorite::class, RecognizableObject::class, Recognizable::class], version = 10)
 abstract class GalleryDatabase : RoomDatabase() {
 
     abstract fun DirectoryDao(): DirectoryDao
@@ -21,6 +21,10 @@ abstract class GalleryDatabase : RoomDatabase() {
     abstract fun DateTakensDao(): DateTakensDao
 
     abstract fun FavoritesDao(): FavoritesDao
+
+    abstract fun ObjectsDao(): ObjectsDao
+
+    abstract fun RecognizablesDao(): RecognizablesDao
 
     companion object {
         private var db: GalleryDatabase? = null

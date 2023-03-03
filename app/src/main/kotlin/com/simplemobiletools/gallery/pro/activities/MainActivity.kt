@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
@@ -27,6 +28,7 @@ import com.simplemobiletools.commons.views.MyRecyclerView
 import com.simplemobiletools.gallery.pro.BuildConfig
 import com.simplemobiletools.gallery.pro.R
 import com.simplemobiletools.gallery.pro.adapters.DirectoryAdapter
+import com.simplemobiletools.gallery.pro.backgroundtasks.RecognizeFaceBackgroundtask
 import com.simplemobiletools.gallery.pro.databases.GalleryDatabase
 import com.simplemobiletools.gallery.pro.dialogs.ChangeSortingDialog
 import com.simplemobiletools.gallery.pro.dialogs.ChangeViewTypeDialog
@@ -40,6 +42,7 @@ import com.simplemobiletools.gallery.pro.models.Directory
 import com.simplemobiletools.gallery.pro.models.Medium
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.*
+import java.util.concurrent.Executors
 
 class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private val PICK_MEDIA = 2
@@ -143,6 +146,9 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         updateWidgets()
         registerFileUpdateListener()
+
+        // perform face recognition
+        startNewFaceRecognizer()
 
         directories_switch_searching.setOnClickListener {
             launchSearchActivity()
@@ -438,6 +444,22 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             if (!photoFetcher.isScheduled(applicationContext)) {
                 photoFetcher.scheduleJob(applicationContext)
             }
+        }
+    }
+
+    private fun startNewFaceRecognizer() {
+        val myExecutor = Executors.newSingleThreadExecutor()
+        val myHandler = Handler(Looper.getMainLooper())
+
+        myExecutor.execute {
+            // Do something in background (back-end process)
+            val faceRecognizer = RecognizeFaceBackgroundtask(context = this)
+            faceRecognizer.detectFaces()
+        }
+
+        myHandler.post {
+            // Do something in UI (front-end process)
+            // todo
         }
     }
 
